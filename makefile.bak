@@ -1,0 +1,39 @@
+.PHONY:all clean
+CC     :=g++
+AT     :=@
+OUTPATH:=out
+TARGET :=$(OUTPATH)/main.exe
+OBJS   :=$(OUTPATH)/main.o
+INCLUDE:=-I./
+VPATH  :=src
+OFLAG=-lwsock32
+SRC=	main.cpp	\
+		log.cpp		\
+		network.cpp	\
+
+
+all:$(TARGET)
+
+$(TARGET):$(SRC:.cpp=.o)
+	$(CC) $^ -o $@ $(OFLAG)
+
+# %o:%c
+#   $(CC) $(INCLUDE) -c $^ -o $@
+# hello.o: hello.c hello.h
+-include $(OUTPATH)/$(SRC:.cpp=.d)
+
+# %.d:%.cpp
+# 	rm -rf $(OUTPATH)/$@
+# 	$(CC) -MM $^ > $(OUTPATH)/$@.bak
+# 	sed 's,\(^$*\),$(OUTPATH)/\1,g' < $(OUTPATH)/$@.bak > $(OUTPATH)/$@
+# 	sed -i 'a\	$(CC) -c $^ -o $(OUTPATH)/$*.o' $(OUTPATH)/$@
+# 	rm -rf $(OUTPATH)/$@.bak
+
+%.d:%.cpp
+	$(CC) -MM $^ > $(OUTPATH)/$@
+	
+	
+
+clean:
+	-rm *.o *.d $(TARGET)
+
